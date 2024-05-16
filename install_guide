@@ -84,7 +84,7 @@ mv $HOME/.junction/priv_validator_state.json.backup $HOME/.junction/data/priv_va
 wget -O $HOME/.junction/config/addrbook.json "https://raw.githubusercontent.com/111STAVR111/props/main/Airchains/addrbook.json"
 sudo systemctl restart junctiond && journalctl -fu junctiond -o cat
 
-#statesinc
+#statesync
 SNAP_RPC=http://airchain.tarabukin.work:60657
 SEEDS="ea14fbef20b102b26e32734a950bdc5ec94532dd@airchain.tarabukin.work:60656"
 cp $HOME/.junction/data/priv_validator_state.json $HOME/.junction/priv_validator_state.json.backup
