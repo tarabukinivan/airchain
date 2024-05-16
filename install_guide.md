@@ -1,8 +1,10 @@
-```#dependenses
+#dependenses
+```
 sudo apt update && sudo apt upgrade -y
 sudo apt install curl tar wget clang pkg-config libssl-dev jq build-essential bsdmainutils git make ncdu gcc git jq chrony liblz4-tool -y
-
+```
 #install go
+```
 ver="1.21.6"
 wget "https://golang.org/dl/go$ver.linux-amd64.tar.gz"
 sudo rm -rf /usr/local/go
@@ -11,13 +13,14 @@ rm "go$ver.linux-amd64.tar.gz"
 echo "export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin" >> $HOME/.bash_profile
 source $HOME/.bash_profile
 go version
-
+```
 #download binaries
+```
 cd $HOME && mkdir -p go/bin/
 wget https://github.com/airchains-network/junction/releases/download/v0.1.0/junctiond
 chmod +x junctiond
 mv junctiond $HOME/go/bin/
-
+```
 #Initiation
 junctiond init <moniker> --chain-id=junction
 
