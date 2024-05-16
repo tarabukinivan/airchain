@@ -1,9 +1,9 @@
-#dependenses
+dependenses
 ```
 sudo apt update && sudo apt upgrade -y
 sudo apt install curl tar wget clang pkg-config libssl-dev jq build-essential bsdmainutils git make ncdu gcc git jq chrony liblz4-tool -y
 ```
-#install go
+install go
 ```
 ver="1.21.6"
 wget "https://golang.org/dl/go$ver.linux-amd64.tar.gz"
@@ -14,25 +14,29 @@ echo "export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin" >> $HOME/.bash_profile
 source $HOME/.bash_profile
 go version
 ```
-#download binaries
+download binaries
 ```
 cd $HOME && mkdir -p go/bin/
 wget https://github.com/airchains-network/junction/releases/download/v0.1.0/junctiond
 chmod +x junctiond
 mv junctiond $HOME/go/bin/
 ```
-#Initiation
+Initiation
+```
 junctiond init <moniker> --chain-id=junction
-
-#Create or recover wallet
+```
+Create or recover wallet
+```
 junctiond  keys add <walletname>
 junctiond keys add <walletname> --recover
-
-#Download genesis and addrbook
+```
+Download genesis and addrbook
+```
 wget -O $HOME/.junction/config/genesis.json "https://raw.githubusercontent.com/111STAVR111/props/main/Airchains/genesis.json"
 wget -O $HOME/.junction/config/addrbook.json "https://raw.githubusercontent.com/111STAVR111/props/main/Airchains/addrbook.json"
-
-#Set up the minimum gas price and Peers/Seeds/Filter peers/MaxPeers
+```
+Set up the minimum gas price and Peers/Seeds/Filter peers/MaxPeers
+```
 sed -i 's/minimum-gas-prices =.*$/minimum-gas-prices = "0.001amf"/' $HOME/.junction/config/app.toml
 external_address=$(wget -qO- eth0.me) 
 sed -i.bak -e "s/^external_address *=.*/external_address = \"$external_address:26656\"/" $HOME/.junction/config/config.toml
@@ -42,8 +46,9 @@ seeds=""
 sed -i.bak -e "s/^seeds =.*/seeds = \"$seeds\"/" $HOME/.junction/config/config.toml
 sed -i 's/max_num_inbound_peers =.*/max_num_inbound_peers = 50/g' $HOME/.junction/config/config.toml
 sed -i 's/max_num_outbound_peers =.*/max_num_outbound_peers = 50/g' $HOME/.junction/config/config.toml
-
-#pruning
+```
+pruning
+```
 pruning="custom"
 pruning_keep_recent="1000"
 pruning_keep_every="0"
@@ -52,15 +57,18 @@ sed -i -e "s/^pruning *=.*/pruning = \"$pruning\"/" $HOME/.junction/config/app.t
 sed -i -e "s/^pruning-keep-recent *=.*/pruning-keep-recent = \"$pruning_keep_recent\"/" $HOME/.junction/config/app.toml
 sed -i -e "s/^pruning-keep-every *=.*/pruning-keep-every = \"$pruning_keep_every\"/" $HOME/.junction/config/app.toml
 sed -i -e "s/^pruning-interval *=.*/pruning-interval = \"$pruning_interval\"/" $HOME/.junction/config/app.toml
-
-#indexer(optional)
+```
+indexer(optional)
+```
 indexer="null" &&
 sed -i -e "s/^indexer *=.*/indexer = \"$indexer\"/" $HOME/.junction/config/config.toml
-
-#chain-id
+```
+chain-id
+```
 junctiond config chain-id junction
-
-#create a service
+```
+create a service
+```
 sudo tee /etc/systemd/system/junctiond.service > /dev/null <<EOF
 [Unit]
 Description=junction
@@ -76,8 +84,9 @@ LimitNOFILE=65535
 [Install]
 WantedBy=multi-user.target
 EOF
-
-#snapshot
+```
+snapshot
+```
 cd $HOME
 apt install lz4
 sudo systemctl stop junctiond
@@ -87,8 +96,9 @@ curl -o - -L https://airchains-t.snapshot.stavr.tech/airchain-snap.tar.lz4 | lz4
 mv $HOME/.junction/priv_validator_state.json.backup $HOME/.junction/data/priv_validator_state.json
 wget -O $HOME/.junction/config/addrbook.json "https://raw.githubusercontent.com/111STAVR111/props/main/Airchains/addrbook.json"
 sudo systemctl restart junctiond && journalctl -fu junctiond -o cat
-
-#statesync
+```
+statesync
+```
 SNAP_RPC=http://airchain.tarabukin.work:60657
 SEEDS="ea14fbef20b102b26e32734a950bdc5ec94532dd@airchain.tarabukin.work:60656"
 cp $HOME/.junction/data/priv_validator_state.json $HOME/.junction/priv_validator_state.json.backup
@@ -108,16 +118,19 @@ junctiond tendermint unsafe-reset-all --home $HOME/.junction --keep-addr-book
 mv $HOME/.junction/priv_validator_state.json.backup $HOME/.junction/data/priv_validator_state.json
 wget -O $HOME/.junction/config/addrbook.json "https://raw.githubusercontent.com/111STAVR111/props/main/Airchains/addrbook.json"
 sudo systemctl restart junctiond && journalctl -fu junctiond -o cat
-
-
-#run node
+```
+run node
+```
 sudo systemctl daemon-reload
 sudo systemctl enable junctiond
 sudo systemctl restart junctiond && sudo journalctl -fu junctiond -o cat
-
-#create validator
+```
+create validator
+```
 junctiond tendermint show-validator --home /root/.junction
+```
 copy pubkey
+```
 cd $HOME
 nano /root/.junction/validator.json
 {
